@@ -1,5 +1,7 @@
 package db;
 
+import service.GiftService;
+
 public class ServiceReturner {
     private DataBaseConfig config;
 
@@ -9,5 +11,9 @@ public class ServiceReturner {
 
     public void close(){
         config.close();
+    }
+
+    public GiftService getGiftService(){
+        return new GiftService(config);
     }
 }

@@ -16,7 +16,7 @@ public class Initializer implements ServletContextListener {
             throw new RuntimeException(e);
         }
         sce.getServletContext().setAttribute("database", new ServiceReturner());
-        Flyway flyway = Flyway.configure()
+        Flyway flyway = Flyway.configure().baselineOnMigrate(true)
                 .dataSource("jdbc:postgresql://localhost:5432/oris", "postgres", "root").load();
         flyway.migrate();
     }
@@ -26,4 +26,5 @@ public class Initializer implements ServletContextListener {
         ServiceReturner serviceReturner = (ServiceReturner) sce.getServletContext().getAttribute("database");
         serviceReturner.close();
     }
+
 }

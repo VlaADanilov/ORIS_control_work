@@ -12,6 +12,11 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DataBaseConfig {
+    private static final String URL = "jdbc:postgresql://localhost:5432/oris";
+    private static final String USERNAME = "postgres";
+    private static final String PASSWORD = "root";
+    private static final String DRIVER = "org.postgresql.Driver";
+    private static final int MAX_POOL_SIZE = 20;
     private HikariConfig config;
 
     private HikariDataSource dataSource;
@@ -23,24 +28,25 @@ public class DataBaseConfig {
 
     private void initHikariConfig(){
         try {
-            Properties prop = new Properties();
-            File file = new File("src/main/resources/database.properties");
-            System.out.println(file.getAbsolutePath());
-            prop.load(new FileReader("src/main/resources/database.properties"));
             config = new HikariConfig();
-            config.setDriverClassName(prop.getProperty("db.driver"));
-            config.setJdbcUrl(prop.getProperty("db.url"));
-            config.setUsername(prop.getProperty("db.username"));
-            config.setPassword(prop.getProperty("db.password"));
-            config.setMaximumPoolSize(Integer.parseInt(prop.getProperty("db.max_pool_size")));
+            config.setDriverClassName(DRIVER);
+            config.setJdbcUrl(URL);
+            config.setUsername(USERNAME);
+            config.setPassword(PASSWORD);
+            config.setMaximumPoolSize(MAX_POOL_SIZE);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+    public Connection getConnection(){
+        try {
+            return dataSource.getConnection();
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
+
 
     public void close(){
         dataSource.close();
